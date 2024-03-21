@@ -31,4 +31,7 @@ jobs:
   
   steps:
    - run: wget   https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz 
-   - run: dockerize   -wait tcp://localhost:5432 -timeout 1m 
+   - run: dockerize   -wait tcp://localhost:5432 -timeout 1m
+   - uses: actions/checkout@v4
+   - uses: actions/setup-java@v4
+   - run: maven verify
