@@ -34,4 +34,7 @@ jobs:
    - run: dockerize   -wait tcp://localhost:5432 -timeout 1m
    - uses: actions/checkout@v4
    - uses: actions/setup-java@v4
+     with:
+      distribution: temurin
+      java-version: '11.0'
    - run: maven verify
