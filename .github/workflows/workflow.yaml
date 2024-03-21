@@ -26,9 +26,6 @@ jobs:
           - 5432:5432
           
   env:
-   POSTGRES_USER : postgres
-   POSTGRES_PASSWORD : password
-   POSTGRES_DB : cfd
    DOCKERIZE_VERSION : v0.6.1
   
   steps:
