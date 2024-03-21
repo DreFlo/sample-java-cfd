@@ -28,5 +28,5 @@ jobs:
    - run: wget   https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz 
    - run: dockerize   -wait tcp://172.17.0.1:5432 -timeout 1m
    - uses: actions/checkout@v4
-   - run: sudo iptables -t nat -A PREROUTING -d 127.0.0.1 -p tcp --dport 5432 -j DNAT --to 172.17.0.1:5432
+   - run: sudo iptables -t nat -A PREROUTING -d 127.0.0.1 -p tcp -j DNAT --to 172.17.0.1
    - run: mvn verify
