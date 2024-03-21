@@ -18,19 +18,14 @@ jobs:
           POSTGRES_USER : postgres
           POSTGRES_PASSWORD : password
           POSTGRES_DB : cfd
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
         ports:
-          - 127.0.0.1:5432:5432
+          - 5432:5432
           
   env:
    DOCKERIZE_VERSION : v0.6.1
   
   steps:
    - run: wget   https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz 
-   - run: dockerize   -wait tcp://localhost:5432 -timeout 1m
+   - run: dockerize   -wait tcp://172.17.0.1:5432 -timeout 1m
    - uses: actions/checkout@v4
    - run: mvn verify
