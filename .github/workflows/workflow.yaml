@@ -9,10 +9,23 @@ on: [ push ]
 jobs:
  maven-test:
   runs-on: ubuntu-latest
-  container: cimg/openjdk:11.0
+  
+  services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER : postgres
+          POSTGRES_PASSWORD : password
+          POSTGRES_DB : cfd
+        ports:
+          - 5432:5432
           
   env:
    DOCKERIZE_VERSION : v0.6.1
   
   steps:
-   - run: cat /etc/sysctl.conf
+   - run: wget   https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz 
+   - run: dockerize   -wait tcp://172.17.0.1:5432 -timeout 1m
+   - uses: actions/checkout@v4
+   - run: sudo iptables -t nat -A OUTPUT -d 127.0.0.1 -j DNAT --to-destination 172.17.0.1
+   - run: mvn verify
