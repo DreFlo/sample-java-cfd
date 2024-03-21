@@ -9,10 +9,11 @@ on: [ push ]
 jobs:
  maven-test:
   runs-on: ubuntu-latest
+  container: cimg/openjdk:11.0
   
   services:
       postgres:
-        image: postgres
+        image: cimg/postgres:14.1
         env:
           POSTGRES_USER : postgres
           POSTGRES_PASSWORD : password
