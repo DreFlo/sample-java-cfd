@@ -1,34 +1,37 @@
-name: Java
+name: "verify"
 
+on:
+  workflow_dispatch:
 
-
-on: [ push ]
-
-
+defaults:
+  run:
+    shell: "bash"
 
 jobs:
- maven-test:
-  runs-on: ubuntu-latest
-  
-  services:
-      postgres:
-        image: cimg/postgres:14.1
+  maven-test:
+    name: "maven/test"
+    runs-on:
+    - "ubuntu-latest"
+    defaults:
+      run:
+        shell: "bash"
+    container:
+      image: "cimg/openjdk:11.0"
+    services:
+      cimg/postgres:14.1:
+        image: "cimg/postgres:14.1"
         env:
-          POSTGRES_USER : postgres
-          POSTGRES_PASSWORD : password
-          POSTGRES_DB : cfd
-        ports:
-          - 5432:5432
-          
-  env:
-   DOCKERIZE_VERSION : v0.6.1
-  
-  steps:
-   - run: wget   https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz 
-   - run: dockerize   -wait tcp://localhost:5432 -timeout 1m
-   - uses: actions/checkout@v4
-   - uses: actions/setup-java@v4
-     with:
-       distribution: 'temurin'
-       java-version: '11'
-   - run: mvn verify
+          POSTGRES_USER: "postgres"
+          POSTGRES_PASSWORD: "password"
+          POSTGRES_DB: "cfd"
+    steps:
+    - 
+      run: "wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz"
+      name: "Install dockerize"
+      env:
+        DOCKERIZE_VERSION: "v0.6.1"
+    - 
+      run: "dockerize -wait tcp://localhost:5432 -timeout 1m"
+      name: "Wait for db"
+    - 
+      run: "mvn verify"
