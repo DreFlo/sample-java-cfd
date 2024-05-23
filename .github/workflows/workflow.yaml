@@ -15,8 +15,6 @@ jobs:
     defaults:
       run:
         shell: "bash"
-    container:
-      image: "cimg/openjdk:11.0"
     services:
       cimg/postgres:14.1:
         image: "cimg/postgres:14.1"
@@ -28,6 +26,10 @@ jobs:
           - 5432:5432
     steps:
     - uses: actions/checkout@v4
+    - uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '11'
     - 
       run: "wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz"
       name: "Install dockerize"
