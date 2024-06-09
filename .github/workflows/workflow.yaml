@@ -3,37 +3,29 @@ name: "verify"
 on:
   workflow_dispatch:
 
-defaults:
-  run:
-    shell: "bash"
-
 jobs:
   maven-test:
     name: "maven/test"
     runs-on:
     - "ubuntu-latest"
-    defaults:
-      run:
-        shell: "bash"
     container:
       image: "cimg/openjdk:11.0"
     services:
       cimg/postgres:14.1:
         image: "cimg/postgres:14.1"
         env:
+          POSTGRES_DB: "cfd"
           POSTGRES_USER: "postgres"
           POSTGRES_PASSWORD: "password"
-          POSTGRES_DB: "cfd"
         ports:
-          - 5432:5432
+        - "5432:5432"
     steps:
-    - uses: actions/checkout@v4
+    - uses: "actions/checkout@v4"
     - 
       run: "wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz"
       name: "Install dockerize"
       env:
         DOCKERIZE_VERSION: "v0.6.1"
-    - 
-      run: "dockerize -wait tcp://172.17.0.1:5432 -timeout 1m"
-      name: "Wait for db"
-    - run: mvn verify
+    - run: "dockerize -wait tcp://172.17.0.1:5432 -timeout 1m"
+    - run: "mvn verify"
+
