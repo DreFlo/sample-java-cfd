@@ -14,11 +14,9 @@ jobs:
       cimg/postgres:14.1:
         image: "cimg/postgres:14.1"
         env:
-          POSTGRES_DB: "cfd"
-          POSTGRES_USER: "postgres"
           POSTGRES_PASSWORD: "password"
-        ports:
-        - "5432:5432"
+          POSTGRES_USER: "postgres"
+          POSTGRES_DB: "cfd"
     steps:
     - uses: "actions/checkout@v4"
     - 
